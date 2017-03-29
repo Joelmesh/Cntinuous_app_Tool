@@ -348,13 +348,16 @@ function callName()
 
 function callLogout()
 {
+ var r=confirm("Do you wish to Log out");
+  if(r==true)
+{
   firebase.auth().signOut().then(function() {
-  alert("Do you wish to Log out");
-  window.location.href="../index.html";
-},
-function(error) {
+   window.location.href="../index.html";
+   },
+ function(error) {
  alert("Unable to logout");
 });
+}
 }
 	//Call() finds the Internal Key of employees reporting to the logged in employee(does not find nested reporting employees)
 
@@ -484,9 +487,11 @@ dRef
 
                     }
                     calc_avg =((rating_avg)/week_count);
+                  //  calc_avg=calc_avg.toFixed(2);
+                    calc_avg =roundToTwo(calc_avg);
                     if(isNaN(calc_avg))
                     {
-                    calc_avg = null;
+                    calc_avg = "Null";
                     }
 
                     console.log("After the change avg is :"+calc_avg);
@@ -532,7 +537,9 @@ dRef
                 )
     }
 
-
+function roundToTwo(num) {
+    return +(Math.round(num + "e+2")  + "e-2");
+}
    function get_Names(pushed_keys)
     {
         var data_rating=new Array;
@@ -558,7 +565,13 @@ dRef
 												var Name=data.Name;
 												console.log("..........Name from the get_Names():"+Name);
 												var trHTML = '';
-												trHTML += "<tr><td>"  +data.Name +"</td><td>"+data.EID+ "</td><td>" +data.Designation+ "</td><td>" +data.AvgRating+ "</td><td>" +data.ReportManager+'</td><td><div class=view><ul><li><a href=# onclick="ViewRatings(\''+Name+'\')"><i class="fa fa-eye" aria-hidden=true></i>View</a></li><li><a href=# onclick="CallRating(\''+Name+'\')"><i class="fa fa-plus" aria-hidden=true></i>Add</a></li></ul></div></td></tr>';
+												var average_value=data.AvgRating;
+                                            if(average_value=="undefined" || average_value=="Null")
+                                            {
+                                                average_value=" ";
+                                            }
+                                                console.log("Iner Name found-----------"+Name);
+												trHTML += "<tr><td>"  +data.Name +"</td><td>"+data.EID+ "</td><td>" +data.Designation+ "</td><td>" +average_value+ "</td><td>" +data.ReportManager+'</td><td><div class=view><ul><li><a href=# onclick="ViewRatings(\''+Name+'\')"><i class="fa fa-eye" aria-hidden=true></i>View</a></li><li><a href=# onclick="CallRating(\''+Name+'\')"><i class="fa fa-plus" aria-hidden=true></i>Add</a></li></ul></div></td></tr>';
 												$('#location').append(trHTML);
 												document.getElementById("loaderspinner").style.visibility = "hidden";
 												//e.style.display = 'none';
@@ -925,9 +938,9 @@ function create_final_graph()
 												var data=childsnapshot.val();
 												var Name=data.Name;
 												var average_value=data.AvgRating;
-												if(typeof(average_value)==="undefined")
+												if(average_value=="Null")
 												{
-												    average_value="Unrated";
+												    average_value=" ";
 												}
 												console.log("Iner Name found-----------"+Name);
 												var trHTML = '';
@@ -1562,12 +1575,12 @@ function CallSort(n)
                       /*Get the two elements you want to compare,
                       one from current row and one from the next:*/
                       x = table.rows[i].cells.item(n).innerHTML;
-                      if(x=="N/A"|| x=="Unrated")
+                      if(x=="N/A"|| x=="Unrated" || x==" ")
                       {
                       x=0;
                       }
                       y = table.rows[i + 1].cells.item(n).innerHTML;
-                      if(y=="N/A"||  y=="Unrated")
+                      if(y=="N/A"||  y=="Unrated" || y==" ")
                       {
                       y=0;
                       }
@@ -1735,7 +1748,8 @@ $(document).ready(function(){
     });
 });
 
-function CallSearch(n) {
+function CallSearch(n)
+ {
   var input, filter, table, tr, td, i;
   if(n==0)
   {
@@ -1761,9 +1775,7 @@ function CallSearch(n) {
   }
   if(n==4)
   {
-
   input=document.getElementById("Text_search5");
-
   }
   filter = input.value.toUpperCase();
   table = document.getElementById("location");

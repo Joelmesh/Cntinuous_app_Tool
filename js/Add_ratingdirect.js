@@ -744,9 +744,6 @@ var Diffval;
 
 
 function Call() {
-
-
-
 var extvar;
 	//e.style.display = 'block';
 	document.getElementById("overall_disp").style.visibility = "hidden";
@@ -879,7 +876,8 @@ var extvar;
     {
      for (i = 0; i < select_dates.options.length; i++)
                               {
-                               select_dates.options[i].disabled = false;
+                             //  select_dates.options[i].disabled = false;
+                                select_dates.options[i].style.color = "#000000";
                               }
 
                               var strUser = select.options[select.selectedIndex].value;
@@ -935,7 +933,8 @@ var extvar;
                             																			if( datein==Rtdate)
 
                             																			{
-                            																				 select_dates.options[i].disabled = true;
+                            																				//select_dates.options[i].disabled = true;
+                            																				 select_dates.options[i].style.color = "#CD5C5C";
                             																			}
                             																		}
                             																				var svTable = document.getElementById("Date_placeholder");
@@ -1011,10 +1010,8 @@ var extvar;
                             }
   function callLabel()
   					{
-
-  						for(i=1;i<=5;i++)
+					for(i=1;i<=5;i++)
   						{
-
   							for(j=1;j<=5;j++)
   							{
   								if(document.getElementById('star'+[i]+[j]).checked)
@@ -1242,77 +1239,147 @@ var extvar;
     //********************************** completed -- Customer-focus-- *********************************//
     					findkey(dcValTrial,dAttitude,dQuality,dMLine,dCfocus);
     						}
+function findkey(d1val,d2val,d3val,d4val,d5val)
+					{
+						var dvval=parseInt(d1val)+parseInt(d2val)+parseInt(d3val)+parseInt(d4val)+parseInt(d5val);
 
-    function findkey(d1val,d2val,d3val,d4val,d5val)
-    					{
-    						var dvval=parseInt(d1val)+parseInt(d2val)+parseInt(d3val)+parseInt(d4val)+parseInt(d5val);
+						var flag=false;
+					    var selDate =  select_dates.options[select_dates.selectedIndex].text;
+						localStorage.setItem("SelectedDate",selDate);
 
-    						var selDate = select_dates.options[select_dates.selectedIndex].text;
+						dvval=dvval/5;
 
-    						localStorage.setItem("SelectedDate",selDate);
+						var Name=select.options[select.selectedIndex].text;
 
-    						dvval=dvval/5;
+						var Newkeyval;
 
-    						var Name=select.options[select.selectedIndex].text;
+						var Message;
 
-    						var Newkeyval;
+						Message=document.getElementById('Msgbox').value;
 
-    						var Message;
+					/*	var dbref=new Firebase("https://benisonapraisal.firebaseio.com/EmployeeDB/EInfo").orderByKey();
 
-    						Message=document.getElementById('Msgbox').value;
+						dbref
+						.once("value")
+						.then
+							(
+							function(snapshot)
+								{
 
-    						var dbref=new Firebase("https://benisonapraisal.firebaseio.com/EmployeeDB/EInfo").orderByKey();
+									snapshot.forEach
+									(
 
-    						dbref
-    						.once("value")
-    						.then
-    							(
-    							function(snapshot)
-    								{
+										function(childsnapshot)
+										{
 
-    									snapshot.forEach
-    									(
+										 var data = childsnapshot.val();
+										 var Nameval=data.Name;
 
-    										function(childsnapshot)
-    										{
+                                         if(Nameval==EName)
+                                         {*/
+                                         //var login = localStorage.getItem("Email");
+                                         var dbref =firebase.database().ref("EmployeeDB/EInfo").orderByChild("Name").equalTo(Name);
+                                         dbref
+                                        .once("value")
+                                        .then
+                                         (
+                                         function(snapshot)
+                                          {
+                                            snapshot.forEach
+                                            (
+                                             function(childsnapshot)
+                                                        {
+                                                        Ikey=childsnapshot.key;
 
-    										 var data = childsnapshot.val();
-    										 var Nameval=data.Name;
+                                         var dbxref=new Firebase("https://benisonapraisal.firebaseio.com/EmployeeDB/EApraise/"+Ikey);
 
-    											 if(Nameval==Name)
-    											 {
-    											 Ikey=childsnapshot.key();
-    											 var dbxref=new Firebase("https://benisonapraisal.firebaseio.com/EmployeeDB/EApraise/"+Ikey);
+                                         dbxref
+                                         .once("value")
+											 .then
+											 (
+                                              function(snapshot)
+                                                {
 
-    												var RNref =
-    												dbxref
-    												.push(
-    														{
-    														Dateval:selDate,
-    														Discipline:d1val,
-    														Attitude: d2val,
-    														Quality: d3val,
-    														DeadlineMet:d4val,
-    														CustomerFocus:d5val,
-    														//Initiative:d6val,
-    														Ovaerll:dvval,
-    														Comment:Message,
-    														Name:Nameval
-    														}
-    													 );
-    												if(RNref)
-    												{
-    													//alert("Saved to database,Overall Rating is : "+dvval);
+                                                function axel()
+                                                {
+                                                if(flag==false)
+                                                {
+                                                var RNref =
+                                                dbxref
+                                                .push(
+                                                        {
+                                                        Dateval:selDate,
+                                                        Discipline:d1val,
+                                                        Attitude: d2val,
+                                                        Quality: d3val,
+                                                        DeadlineMet:d4val,
+                                                        CustomerFocus:d5val,
+                                                        //Initiative:d6val,
+                                                        Ovaerll:dvval,
+                                                        Comment:Message,
+                                                        Name:Name
+                                                        }
+                                                     );
+                                                if(RNref)
+                                                {
+                                                    //alert("Saved to database,Overall Rating is : "+dvval);
+                                                    write(dvval);
+                                                    window.location.href="dashboard.html";
+                                                }
+                                                }
+                                                }
+                                                 return new Promise(function(resolve,reject){
+                                                    snapshot.forEach
+                                                    (
+                                                        function(childsnapshot)
+                                                        {
+                                                        var c_data=childsnapshot.val();
+                                                        var date=c_data.Dateval;
+                                                        if(date==selDate)
+                                                        {
+                                                         var nIkey=childsnapshot.key();
+                                                         var dbxnref=new Firebase("https://benisonapraisal.firebaseio.com/EmployeeDB/EApraise/"+Ikey+"/"+nIkey);
+                                                         var rel="https://benisonapraisal.firebaseio.com/EmployeeDB/EApraise/"+Ikey+"/"+nIkey;
+                                                         console.log("Firebase:"+rel);
+                                                         var x=  dbxnref
+                                                                .set(
+                                                                    {
+                                                                    Dateval:selDate,
+                                                                    Discipline:d1val,
+                                                                    Attitude: d2val,
+                                                                    Quality: d3val,
+                                                                    DeadlineMet:d4val,
+                                                                    CustomerFocus:d5val,
+                                                                    //Initiative:d6val,
+                                                                    Ovaerll:dvval,
+                                                                    Comment:Message,
+                                                                    Name:Name
+                                                                    }
+                                                                    );
+                                                              if(x)
+                                                               {
+                                                                 write(dvval);
+                                                                 window.location.href="dashboard.html";
+                                                               }
+                                                             flag=true;
+                                                        }
 
-    													write(dvval);
-    												}
 
-    											  }
-    										}
-    									);
-    								}
-    							);
-    					}
+											           }
+									            );
+									            resolve(axel())
+								}
+								)
+
+
+					}
+					);
+
+					}
+					)
+					}
+					)
+					}
 	function write(Overall)
 					{
 
@@ -1337,25 +1404,21 @@ var extvar;
 
   throw_display(strUser);
 
-            var dbref=new Firebase("https://benisonapraisal.firebaseio.com/EmployeeDB/EInfo").orderByKey();
-                        dbref
-						.once("value")
-						.then
-							(
-							function(snapshot)
-								{
-        						snapshot.forEach
-									(
-										function(childsnapshot)
-										{
-										 var data = childsnapshot.val();
-										 var Nameval=data.Name;
-											 if(Nameval==strUser)
-											 {
-											 Ikey=childsnapshot.key();
-											 var dxRef=new Firebase("https://benisonapraisal.firebaseio.com/EmployeeDB/EApraise/"+Ikey);
-											 dxRef
-													.once("value")
+  var dbref =firebase.database().ref("EmployeeDB/EInfo").orderByChild("Name").equalTo(strUser);
+                                           dbref
+                                          .once("value")
+                                          .then
+                                           (
+                                           function(snapshot)
+                                            {
+                                              snapshot.forEach
+                                              (
+                                               function(childsnapshot)
+                                                {
+                                                 Ikey=childsnapshot.key;
+                                                 var dxRef=new Firebase("https://benisonapraisal.firebaseio.com/EmployeeDB/EApraise/"+Ikey);
+                                                 dxRef
+                                                        .once("value")
 														.then
 														(
 															function(snapshot)
@@ -1385,7 +1448,8 @@ var extvar;
 																			if( datein==Rtdate)
 
 																			{
-																				 select_dates.options[i].disabled = true;
+																				 //select_dates.options[i].disabled = true;
+																				  select_dates.options[i].style.color = "#CD5C5C";
 																			}
 																		}
 																				var svTable = document.getElementById("Date_placeholder");
@@ -1396,10 +1460,10 @@ var extvar;
 															}
 														);
 											 }
+                                           )
 										}
 									);
-								}
-							);
+
 
   }
 
@@ -1419,17 +1483,16 @@ var ele=document.getElementById("Username");
 }
 function callLogout()
 {
-
- firebase.auth().signOut().then(function() {
-  alert("Do you wish to Log out");
-  window.location.href="log.html";
-},
-
+ var r=confirm("Do you wish to Log out");
+  if(r==true)
+{
+  firebase.auth().signOut().then(function() {
+   window.location.href="../index.html";
+   },
  function(error) {
  alert("Unable to logout");
 });
-
-
+}
 }
 
 function Edit_tabel(Flag)

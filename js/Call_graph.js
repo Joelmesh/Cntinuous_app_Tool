@@ -726,15 +726,16 @@ console.log("Rating in data:"+Name+":"+g_data[i]);
 function callLogout()
 {
 
- firebase.auth().signOut().then(function() {
-  alert("Do you wish to Log out");
-  window.location.href="log.html";
-},
-
- function(error) {
- alert("Unable to logout");
-});
-
+  var r=confirm("Do you wish to Log out");
+   if(r==true)
+ {
+   firebase.auth().signOut().then(function() {
+    window.location.href="../index.html";
+    },
+  function(error) {
+  alert("Unable to logout");
+ });
+ }
 
 }
 

@@ -1189,7 +1189,7 @@ dxref
                     if(count_snap==select.length-1)
                                    {
                                   // console.log("value of count:"+count_snap);
-                                   call_graph();
+                                 //  call_graph();
 
                                    }
             }
@@ -1950,17 +1950,16 @@ doc.save(strUser+'.pdf');
 
 function callLogout()
 {
-
- firebase.auth().signOut().then(function() {
-  alert("Do you wish to Log out");
-  window.location.href="log.html";
-},
-
+  var r=confirm("Do you wish to Log out");
+  if(r==true)
+{
+  firebase.auth().signOut().then(function() {
+   window.location.href="../index.html";
+   },
  function(error) {
  alert("Unable to logout");
 });
-
-
+}
 }
 
 function Callraise()

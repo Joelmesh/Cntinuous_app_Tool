@@ -727,3 +727,17 @@ dRef
       }
       return color;
   }
+
+  function callLogout()
+  {
+   var r=confirm("Do you wish to Log out");
+    if(r==true)
+  {
+    firebase.auth().signOut().then(function() {
+     window.location.href="../index.html";
+     },
+   function(error) {
+   alert("Unable to logout");
+  });
+  }
+  }
