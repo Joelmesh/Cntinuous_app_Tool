@@ -3,6 +3,6 @@
     "rules": "database.rules.json"
   },
   "hosting": {
-    "public": "Alter_"
+    "public": "Cntinuous_app_Tool"
   }
 }
